@@ -2,15 +2,125 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Phantom X OTC Signal Bot</title>
-    <meta property="og:image" content="https://bolt.new/static/og_default.png" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://bolt.new/static/og_default.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Primary meta -->
+    <title>PHANTOM X BOT — Tradowix OTC Signal Engine</title>
+    <meta name="description" content="PHANTOM X BOT — Elite AI-powered next-candle prediction system for Tradowix OTC, Live Forex, Crypto and Commodities." />
+    <meta name="theme-color" content="#000000" />
+    <meta name="robots"      content="noindex, nofollow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:title"       content="PHANTOM X BOT — Tradowix Signal Engine" />
+    <meta property="og:description" content="Elite AI next-candle prediction for Tradowix OTC, Forex, Crypto and Commodities." />
+    <meta property="og:site_name"   content="PHANTOM X BOT" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content="PHANTOM X BOT — Tradowix" />
+    <meta name="twitter:description" content="Elite AI-powered next-candle prediction engine." />
+
+    <!-- PWA / mobile app -->
+    <meta name="mobile-web-app-capable"            content="yes" />
+    <meta name="apple-mobile-web-app-capable"      content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title"        content="PHANTOM X" />
+
+    <!-- Inline SVG favicon — lightning bolt on black -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000'/%3E%3Cpolygon points='55,10 25,55 48,55 45,90 75,45 52,45' fill='%23a855f7' stroke='%23c084fc' stroke-width='2'/%3E%3C/svg%3E" />
+
+    <!-- Font preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com"    crossorigin />
+
+    <!-- Critical inline styles: zero-FOUC loading splash -->
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { height: 100%; background: #000; color: #fff; overflow-x: hidden; }
+      #root { min-height: 100vh; }
+
+      #ph-splash {
+        position: fixed; inset: 0; z-index: 9999;
+        background: #000;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 18px;
+        transition: opacity 0.35s ease;
+      }
+      #ph-splash.hide { opacity: 0; pointer-events: none; }
+      #ph-splash::before {
+        content: '';
+        position: absolute; inset: 0; pointer-events: none;
+        background-image:
+          linear-gradient(rgba(168,85,247,.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(168,85,247,.05) 1px, transparent 1px);
+        background-size: 44px 44px;
+      }
+      .ph-logo {
+        width: 72px; height: 72px; border-radius: 18px; position: relative;
+        background: linear-gradient(135deg, #1a0040, #3b0764);
+        border: 1px solid rgba(168,85,247,.65);
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 0 28px rgba(168,85,247,.5), 0 0 56px rgba(168,85,247,.2);
+        animation: ph-float 2.5s ease-in-out infinite;
+      }
+      .ph-logo svg { width: 36px; height: 36px; }
+      .ph-title {
+        font-family: system-ui, sans-serif;
+        font-size: 22px; font-weight: 900; letter-spacing: .2em;
+        color: #a855f7;
+        text-shadow: 0 0 18px rgba(168,85,247,.8), 0 0 36px rgba(168,85,247,.4);
+      }
+      .ph-sub {
+        font-size: 10px; letter-spacing: .4em; color: rgba(168,85,247,.45);
+        text-transform: uppercase; font-family: system-ui, sans-serif;
+      }
+      .ph-spin {
+        width: 26px; height: 26px; border-radius: 50%;
+        border: 2px solid rgba(168,85,247,.18);
+        border-top-color: #a855f7;
+        animation: ph-spin .8s linear infinite;
+      }
+      @keyframes ph-float {
+        0%, 100% { transform: translateY(0); }
+        50%       { transform: translateY(-7px); }
+      }
+      @keyframes ph-spin { to { transform: rotate(360deg); } }
+    </style>
   </head>
   <body>
+
+    <!-- Instant loading splash — React hides this once mounted -->
+    <div id="ph-splash">
+      <div class="ph-logo">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="13,2 5,13 11,13 11,22 19,11 13,11"
+            fill="#a855f7" stroke="#c084fc" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="ph-title">PHANTOM X</div>
+      <div class="ph-sub">Tradowix · OTC Signal Engine</div>
+      <div class="ph-spin"></div>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <script>
+      // Dismiss splash once React renders the root element
+      (function() {
+        var splash = document.getElementById('ph-splash');
+        if (!splash) return;
+        var obs = new MutationObserver(function() {
+          var root = document.getElementById('root');
+          if (root && root.firstElementChild) {
+            splash.classList.add('hide');
+            setTimeout(function() { splash.remove(); }, 380);
+            obs.disconnect();
+          }
+        });
+        obs.observe(document.getElementById('root'), { childList: true, subtree: false });
+      })();
+    </script>
   </body>
 </html>
